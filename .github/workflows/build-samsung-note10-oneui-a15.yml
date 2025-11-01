@@ -12,8 +12,8 @@ env:
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LLVM=1 LLVM_IAS=1"
 
-  KERNEL_SOURCE : "https://github.com/JackA1ltman/ExtremeKernel_noksu.git"
-  KERNEL_BRANCH : "main"
+  KERNEL_SOURCE : "https://github.com/redmax157/Lineage22.git"
+  KERNEL_BRANCH : "lineage-22"
 
   CLANG_SOURCE : "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
   CLANG_BRANCH : ""
@@ -25,7 +25,7 @@ env:
   GCC_32_BRANCH : ""
 
   DEFCONFIG_SOURCE: ""
-  DEFCONFIG_NAME : "exynos9820_defconfig"
+  DEFCONFIG_NAME : "exynos9830-r8slte_defconfig"
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
