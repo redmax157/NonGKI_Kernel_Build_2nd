@@ -1,7 +1,7 @@
 <h2 align="center">Non-GKI 内核自动化编译项目</h2>
 
 <p align="center">
-  <a href="README.md">English</a> | 中文说明 | <a href="Supported_list.md">支持列表</a> | <a href="https://github.com/JackA1ltman/NonGKI_Kernel_Build_2nd/wiki">Wiki</a>
+  <a href="README.md">English</a> | 中文说明 | <a href="Supported_list.md">支持列表</a> | <a href="https://github.com/JackA1ltman/NonGKI_Kernel_Build_2nd/wiki">Wiki</a> | <a href="https://t.me/+9XqfxcDtpkM2ZGE1">Telegram 群组</a>
 </p>
 <p align="center">
   <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/JackA1ltman/NonGKI_Kernel_Build_2nd/build-release.yml?branch=mainline&style=for-the-badge"> <img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads/JackA1ltman/NonGKI_Kernel_Build_2nd/latest/total?style=for-the-badge">
@@ -51,7 +51,7 @@
     - [ ] 支持在ARM64下编译
 - [x] **编译**
     - [x] 支持ARM64内核
-    - [x] 支持ARM(ARMV7A)内核
+    - [ ] 支持ARM(ARMV7A)内核（已放弃支持）
     
 ---
 
@@ -69,10 +69,11 @@
 ### 版权
 - [KernelSU](https://github.com/tiann/KernelSU) - @tiann
     - [rsuntk](https://github.com/rsuntk/KernelSU) - @rsuntk
-    - [Magic](https://github.com/backslashxx/KernelSU) - @backslashxx
+        - [rsuntk-SuSFS](https://github.com/cyberc3dr/KernelSU) - @cyberc3dr
+    - [xxksu](https://github.com/backslashxx/KernelSU) - @backslashxx
     - [SukiSU-Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra) - @ShirkNeko
+        - [ReSukiSU](https://github.com/ReSukiSU/ReSukiSU) - @ReSukiSU Development
     - [Next](https://github.com/KernelSU-Next/KernelSU-Next) - @rifsxd
-        - [Wild](https://github.com/WildKernels/Wild_KSU) - @TheWildJames
 - [SuSFS](https://gitlab.com/simonpunk/susfs4ksu) - @simonpunk
 - [Re:Kernel](https://github.com/Sakion-Team/Re-Kernel) - @Sakion-Team
 - [Baseband Guard](https://github.com/vc-teahouse/Baseband-guard) - @秋刀鱼

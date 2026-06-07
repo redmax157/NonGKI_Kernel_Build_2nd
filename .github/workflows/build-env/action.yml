@@ -59,6 +59,23 @@ runs:
               false
           fi
 
+      - name: Free Disk Space (Ubuntu)
+        if: env.FREE_MORE_SPACE == 'true' && env.SYSTEM_VERSION == 'newer' || env.SYSTEM_VERSION == 'older'
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: true
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
       - name: Remove useless tools
         if: env.SYSTEM_VERSION == 'newer' || env.SYSTEM_VERSION == 'older'
         shell: bash
@@ -90,9 +107,21 @@ runs:
             echo "$TZ" > /etc/timezone
 
             apt-get update
-            apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler wget curl cpio coccinella -y
+            apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler wget curl cpio -y
             apt-get install p7zip p7zip-full -y
             apt-get install libtinfo5 -y
+
+            # Install Coccinelle
+            if [[ "${{ env.HIDE_STUFF }}" == "true" ]]; then
+                apt-get install pkg-config ocaml-nox ocaml-findlib autoconf libpcre3-dev python3-dev menhir libparmap-ocaml-dev libpcre-ocaml-dev -y
+                wget https://coccinelle.gitlabpages.inria.fr/website/distrib/coccinelle-1.3.tar.gz
+                tar zxf coccinelle-1.3.tar.gz
+                cd coccinelle-1.3
+                ./autogen
+                ./configure
+                make
+                make install
+            fi
 
             if [ "${{ env.PYTHON_VERSION }}" == "3" ]; then
                 apt install python3 -y
@@ -128,9 +157,21 @@ runs:
           elif [ "${{ env.SYSTEM_VERSION }}" == "older" ]; then
 
             sudo apt-get update
-            sudo apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler wget curl cpio coccinella -y
+            sudo apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler wget curl cpio -y
             sudo apt-get install p7zip p7zip-full -y
             sudo apt-get install libtinfo5 -y
+
+            # Install Coccinelle
+            if [[ "${{ env.HIDE_STUFF }}" == "true" ]]; then
+                apt-get install pkg-config ocaml-nox ocaml-findlib autoconf libpcre3-dev python3-dev menhir libparmap-ocaml-dev libpcre-ocaml-dev -y
+                wget https://coccinelle.gitlabpages.inria.fr/website/distrib/coccinelle-1.3.tar.gz
+                tar zxf coccinelle-1.3.tar.gz
+                cd coccinelle-1.3
+                ./autogen
+                ./configure
+                make
+                make install
+            fi
 
             if [ "${{ env.PYTHON_VERSION }}" == "3" ]; then
                 sudo apt install python3 -y
@@ -168,7 +209,7 @@ runs:
           elif [ "${{ env.SYSTEM_VERSION }}" == "newer" ]; then
 
             sudo apt update
-            sudo apt install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler cpio coccinella -y
+            sudo apt install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler cpio coccinelle -y
             sudo apt-get install zstd libc6 binutils libc6-dev-i386 gcc g++ p7zip p7zip-full -y
 
             # Install Libtinfo5
@@ -219,8 +260,17 @@ runs:
 
           elif [ "${{ env.SYSTEM_VERSION }}" == "arch" ]; then
 
+            pacman-key --init
             pacman -Syyu --noconfirm
-            pacman -S git base-devel systemd wget rustup curl patch ccache automake flex lzop bison gperf zip curl bzip2 squashfs-tools pngcrush schedtool make optipng maven pwgen minicom bc unzip 7zip zstd binutils gcc wget which libxml2-legacy cpio coccinella --noconfirm
+            pacman -S git base-devel systemd wget rustup curl patch ccache automake flex lzop bison gperf zip curl bzip2 squashfs-tools pngcrush schedtool make optipng maven pwgen minicom bc unzip 7zip zstd binutils gcc wget which libxml2-legacy cpio --noconfirm
+
+            # Install Coccinelle
+            if [[ "${{ env.HIDE_STUFF }}" == "true" ]]; then
+                echo -e "\n[archlinuxcn]\nServer = https://repo.archlinuxcn.org/\$arch" >> /etc/pacman.conf
+                pacman -Syy
+                pacman -S archlinuxcn-keyring --noconfirm
+                pacman -S coccinelle --noconfirm
+            fi
 
             if [ "${{ env.PYTHON_VERSION }}" == "3" ]; then
                 pacman -S python3 --noconfirm
@@ -443,7 +493,13 @@ runs:
                 cd clang-custom
                 ${{ env.CURLX }} "${{ env.CLANG_SOURCE }}" antman
                 chmod +x antman
-                bash antman -S
+                bash antman -S=10032024
+            elif [[ "${{ env.CLANG_SOURCE }}" == *"android.googlesource.com"* ]]; then
+                git clone "${{ env.CLANG_SOURCE }}" -b "${{ env.CLANG_BRANCH }}" clang-custom --depth=1
+                SUBDIR=$(find clang-custom -maxdepth 1 -type d -name 'clang-r*' | head -n 1)
+                if [ -n "$SUBDIR" ]; then
+                 mv "$SUBDIR"/* clang-custom/
+                fi    
             else
                 echo ">>>>>>>>>>Clang Status<<<<<<<<<<"
                 echo ">                              <"
